@@ -15,6 +15,7 @@ import (
 
 func Run() {
 	ginApp := gin.Default()
+	ginApp.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},

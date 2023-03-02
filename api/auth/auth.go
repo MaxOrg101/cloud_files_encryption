@@ -4,6 +4,8 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"os"
+	"path"
 	"strings"
 	"template-app/models/user/usermethods"
 	"template-app/pkg/paseto"
@@ -17,7 +19,7 @@ import (
 
 // ApplyRoutes applies router to gin Router
 func ApplyRoutes(r *gin.RouterGroup) {
-	g := r.Group("/supabase")
+	g := r.Group("/auth")
 	{
 		g.POST("", supabaseAuth)
 	}
@@ -46,7 +48,15 @@ func supabaseAuth(c *gin.Context) {
 	_, err = usermethods.Get(sbUser.Email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			file_path := path.Join("/workspace/storage-app", "user_id")
+
 			err = usermethods.Add(sbUser.Email)
+			if err != nil {
+				logo.Errorf("failed to add user into database: %s", err)
+				httpo.NewErrorResponse(500, "failed to verify and get paseto").Send(c, 500)
+				return
+			}
+			err = os.Mkdir(file_path, os.ModePerm)
 			if err != nil {
 				logo.Errorf("failed to add user into database: %s", err)
 				httpo.NewErrorResponse(500, "failed to verify and get paseto").Send(c, 500)
