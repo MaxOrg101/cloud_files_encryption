@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"template-app/api/middleware/auth/pasetomiddleware"
 
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/TheLazarusNetwork/go-helpers/logo"
@@ -27,11 +28,12 @@ func getFiles(c *gin.Context) {
 		return
 	}
 
-	// user_id := c.GetString(pasetomiddleware.EmailIdInContext)
-	dir_path := path.Join("/workspace/storage-app", "user_id", body.Path)
-	logo.Info(dir_path)
+	user_id := c.GetString(pasetomiddleware.EmailIdInContext)
+	dir_path := path.Join("/workspace/storage-app", user_id, body.Path)
+	logo.Infof("dir path %s", dir_path)
 	entries, err := os.ReadDir(dir_path)
 	if err != nil {
+		logo.Errorf("failed to read dir: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).
 			SendD(c)
 		return

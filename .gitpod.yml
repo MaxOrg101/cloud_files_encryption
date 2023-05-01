@@ -5,6 +5,7 @@ tasks:
     init: |
       go get
     command: |
+      mkdir /workspace/storage-app
       docker run --name="backend" --rm -d -p 5432:5432 \
       -e POSTGRES_PASSWORD=backend \
       -e POSTGRES_USER=backend \

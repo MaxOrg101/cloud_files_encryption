@@ -48,7 +48,7 @@ func supabaseAuth(c *gin.Context) {
 	_, err = usermethods.Get(sbUser.Email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			file_path := path.Join("/workspace/storage-app", "user_id")
+			file_path := path.Join("/workspace/storage-app", sbUser.Email)
 
 			err = usermethods.Add(sbUser.Email)
 			if err != nil {

@@ -5,6 +5,8 @@ import (
 	"os"
 	"path"
 
+	"template-app/api/middleware/auth/pasetomiddleware"
+
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 )
@@ -26,8 +28,8 @@ func createDir(c *gin.Context) {
 		return
 	}
 
-	// user_id := c.GetString(pasetomiddleware.EmailIdInContext)
-	file_path := path.Join("/workspace/storage-app", "user_id", body.Path)
+	user_id := c.GetString(pasetomiddleware.EmailIdInContext)
+	file_path := path.Join("/workspace/storage-app", user_id, body.Path)
 	err = os.Mkdir(file_path, os.ModePerm)
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).

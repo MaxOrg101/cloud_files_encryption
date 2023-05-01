@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path"
+	"template-app/api/middleware/auth/pasetomiddleware"
 
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -26,8 +27,8 @@ func getFile(c *gin.Context) {
 		return
 	}
 
-	// user_id := c.GetString(pasetomiddleware.EmailIdInContext)
-	file_path := path.Join("/workspace/storage-app", "user_id", body.FilePath)
+	user_id := c.GetString(pasetomiddleware.EmailIdInContext)
+	file_path := path.Join("/workspace/storage-app", user_id, body.FilePath)
 
 	byteFile, err := ioutil.ReadFile(file_path)
 	if err != nil {

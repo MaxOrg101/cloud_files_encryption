@@ -6,6 +6,7 @@ import (
 	"template-app/api/createdir"
 	"template-app/api/getfile"
 	"template-app/api/getfiles"
+	"template-app/api/middleware/auth/pasetomiddleware"
 	"template-app/api/publish"
 	"template-app/api/uploadfile"
 
@@ -16,10 +17,11 @@ import (
 func ApplyRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	{
+		auth.ApplyRoutes(api)
+		api.Use(pasetomiddleware.PASETO)
+		createdir.ApplyRoutes(api)
 		getfiles.ApplyRoutes(api)
 		getfile.ApplyRoutes(api)
-		createdir.ApplyRoutes(api)
-		auth.ApplyRoutes(api)
 		publish.ApplyRoutes(api)
 		uploadfile.ApplyRoutes(api)
 	}

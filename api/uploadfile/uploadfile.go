@@ -3,6 +3,7 @@ package uploadfile
 import (
 	"net/http"
 	"path"
+	"template-app/api/middleware/auth/pasetomiddleware"
 
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/TheLazarusNetwork/go-helpers/logo"
@@ -25,8 +26,8 @@ func uploadFile(c *gin.Context) {
 			Send(c, http.StatusBadRequest)
 		return
 	}
-
-	dir_path := path.Join("/workspace/storage-app", "user_id", request.Path, request.File.Filename)
+	user_id := c.GetString(pasetomiddleware.EmailIdInContext)
+	dir_path := path.Join("/workspace/storage-app", user_id, request.Path, request.File.Filename)
 	logo.Info("max file", dir_path)
 	err = c.SaveUploadedFile(request.File, dir_path)
 
